@@ -23,7 +23,7 @@
   <body>
     <form>
       <div>
-        <label for="root_common_name">Common name:</label>
+        <label for="root_common_name">CA common name:</label>
         <input
           type="text"
           id="root_common_name"
@@ -32,11 +32,20 @@
         />
       </div>
       <div>
-        <label for="root_hosts">Hosts:</label>
+        <label for="server_common_name">Server common name:</label>
         <input
           type="text"
-          id="root_hosts"
-          name="root_hosts"
+          id="server_common_name"
+          name="server_common_name"
+          placeholder="TLSCerts Co."
+        />
+      </div>
+      <div>
+        <label for="server_hosts">Server hosts:</label>
+        <input
+          type="text"
+          id="server_hosts"
+          name="server_hosts"
           placeholder="localhost,tlscerts.dev"
         />
       </div>
