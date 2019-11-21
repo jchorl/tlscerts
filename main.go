@@ -6,6 +6,7 @@ import (
 	"syscall/js"
 
 	"github.com/cloudflare/cfssl/cli/genkey"
+	"github.com/cloudflare/cfssl/config"
 	"github.com/cloudflare/cfssl/csr"
 	"github.com/cloudflare/cfssl/helpers"
 	"github.com/cloudflare/cfssl/initca"
@@ -37,6 +38,14 @@ func generateCACert(commonName string) (CertBundle, error) {
 func generateServerCert(commonName string, hostsJoined string, ca []byte, caKey []byte) (CertBundle, error) {
 	hosts := signer.SplitHosts(hostsJoined)
 
+	return generateCert(commonName, hosts, "www", ServerConfig.Signing, ca, caKey)
+}
+
+func generateClientCert(commonName string, ca []byte, caKey []byte) (CertBundle, error) {
+	return generateCert(commonName, nil, "client", ClientConfig.Signing, ca, caKey)
+}
+
+func generateCert(commonName string, hosts []string, profile string, signingConfig *config.Signing, ca []byte, caKey []byte) (CertBundle, error) {
 	req := csr.CertificateRequest{
 		CN:         commonName,
 		Hosts:      hosts,
@@ -53,7 +62,7 @@ func generateServerCert(commonName string, hostsJoined string, ca []byte, caKey 
 	signReq := signer.SignRequest{
 		Request: string(csrBytes),
 		Hosts:   hosts,
-		Profile: "www",
+		Profile: profile,
 	}
 
 	parsedCa, err := helpers.ParseCertificatePEM(ca)
@@ -66,7 +75,7 @@ func generateServerCert(commonName string, hostsJoined string, ca []byte, caKey 
 		return CertBundle{}, fmt.Errorf("helpers.ParsePrivateKeyPEMWithPassword(...): %w", err)
 	}
 
-	s, err := local.NewSigner(priv, parsedCa, signer.DefaultSigAlgo(priv), ServerConfig.Signing)
+	s, err := local.NewSigner(priv, parsedCa, signer.DefaultSigAlgo(priv), signingConfig)
 	if err != nil {
 		return CertBundle{}, fmt.Errorf("local.NewSigner(...): %w", err)
 	}
@@ -105,6 +114,12 @@ func run(this js.Value, inputs []js.Value) interface{} {
 
 	log.Infof("server public: %s", serverBundle.Public)
 	log.Infof("server private: %s", serverBundle.Private)
+
+	clientCommonName := js.Global().Get("document").Call("getElementById", "client_common_name").Get("value").String()
+	clientBundle, err := generateClientCert(clientCommonName, caBundle.Public, caBundle.Private)
+
+	log.Infof("client public: %s", clientBundle.Public)
+	log.Infof("client private: %s", clientBundle.Private)
 
 	return nil
 }
