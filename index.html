@@ -1,13 +1,46 @@
 <html>
-	<head>
-		<meta charset="utf-8"/>
-		<script src="wasm_exec.js"></script>
-		<script>
-			const go = new Go();
-			WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
-				go.run(result.instance);
-			});
-		</script>
-	</head>
-	<body></body>
+  <head>
+    <meta charset="utf-8" />
+    <script src="wasm_exec.js"></script>
+    <script>
+      if (!WebAssembly.instantiateStreaming) {
+        // polyfill
+        WebAssembly.instantiateStreaming = async (resp, importObject) => {
+          const source = await (await resp).arrayBuffer();
+          return await WebAssembly.instantiate(source, importObject);
+        };
+      }
+
+      const go = new Go();
+      WebAssembly.instantiateStreaming(
+        fetch("main.wasm"),
+        go.importObject
+      ).then(result => {
+        go.run(result.instance);
+      });
+    </script>
+  </head>
+  <body>
+    <form>
+      <div>
+        <label for="root_common_name">Common name:</label>
+        <input
+          type="text"
+          id="root_common_name"
+          name="root_common_name"
+          placeholder="CA"
+        />
+      </div>
+      <div>
+        <label for="root_hosts">Hosts:</label>
+        <input
+          type="text"
+          id="root_hosts"
+          name="root_hosts"
+          placeholder="localhost,tlscerts.dev"
+        />
+      </div>
+      <button type="button" onClick="run();">Generate</button>
+    </form>
+  </body>
 </html>
