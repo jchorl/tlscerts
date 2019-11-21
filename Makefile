@@ -26,3 +26,12 @@ wasm:
 		-u $(UID):$(GID) \
 		jchorl/golang \
 		go build -o main.wasm
+
+test:
+	docker run -it --rm \
+		-v $(PWD):/tlscerts:ro \
+		-w /tlscerts \
+		-e GOCACHE=/tmp/.cache \
+		-u $(UID):$(GID) \
+		jchorl/golang \
+		go test .
