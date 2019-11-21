@@ -1,6 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <title>TLSCerts.dev</title>
     <script src="wasm_exec.js"></script>
     <script>
       if (!WebAssembly.instantiateStreaming) {
@@ -12,53 +13,179 @@
       }
 
       const go = new Go();
-      WebAssembly.instantiateStreaming(
-        fetch("main.wasm"),
-        go.importObject
-      ).then(result => {
-        go.run(result.instance);
-      });
+      // WebAssembly.instantiateStreaming(
+      //   fetch("main.wasm"),
+      //   go.importObject
+      // ).then(result => {
+      //   go.run(result.instance);
+      // });
     </script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Heebo&display=swap"
+      rel="stylesheet"
+    />
+    <style type="text/css">
+      /* colors:
+       background-grey: f1f3f7;
+       dark-text: 212121;
+       normal-text: 4a4a4a;
+       light-text: 737373;
+       */
+      /* font-weights:
+       700: bold;
+       400: normal
+       */
+      body {
+        background-color: #f1f3f7;
+        color: #4a4a4a;
+        font-family: "Heebo", sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+      }
+
+      h1 {
+        color: white;
+        font-size: inherit;
+        font-weight: 700;
+      }
+
+      form {
+        padding: 20px 50px;
+        margin-bottom: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      input {
+        box-shadow: inset 0 2px 4px 0 hsla(0, 0%, 0%, 0.08);
+        padding: 4px;
+        border-radius: 4px;
+        border: 1px solid #c2c2c2;
+        width: 200px;
+      }
+
+      b {
+        font-weight: 700;
+        color: #212121;
+      }
+
+      button {
+        border: none;
+        background-color: #3e78b2;
+        padding: 8px 15px;
+        color: white;
+        font-weight: 700;
+        border-radius: 4px;
+        width: 200px;
+      }
+
+      p {
+        padding: 0 50px;
+      }
+
+      .panel {
+        margin: 50px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 600px;
+        box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+        background-color: white;
+      }
+
+      .banner {
+        background-color: #007a72;
+        color: #e7f9f8;
+        padding: 30px 50px;
+        margin-bottom: 30px;
+      }
+
+      .formfield {
+        margin: 8px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .button_wrapper {
+        display: flex;
+        margin-top: 20px;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
-    <form>
-      <div>
-        <label for="root_common_name">CA common name:</label>
-        <input
-          type="text"
-          id="root_common_name"
-          name="root_common_name"
-          placeholder="CA"
-        />
+    <div class="panel">
+      <div class="banner">
+        <h1>
+          TLSCerts.dev
+        </h1>
+        // Generating TLS certs doesn't have to be hard.
       </div>
-      <div>
-        <label for="server_common_name">Server common name:</label>
-        <input
-          type="text"
-          id="server_common_name"
-          name="server_common_name"
-          placeholder="TLSCerts Co."
-        />
-      </div>
-      <div>
-        <label for="server_hosts">Server hosts:</label>
-        <input
-          type="text"
-          id="server_hosts"
-          name="server_hosts"
-          placeholder="localhost,tlscerts.dev"
-        />
-      </div>
-      <div>
-        <label for="client_common_name">Client common name:</label>
-        <input
-          type="text"
-          id="client_common_name"
-          name="client_common_name"
-          placeholder="George"
-        />
-      </div>
-      <button type="button" onClick="run();">Generate</button>
-    </form>
+      <p>
+        <b>The problem. </b>Generating TLS certs for testing is difficult. Most
+        guides have incomprehensible commands that require security knowledge to
+        operate.
+      </p>
+      <p>
+        <b>The solution. </b>Cloudflare open-sourced their well-trusted Golang
+        TLS library,
+        <a href="https://github.com/cloudflare/cfssl" target="_blank"
+          ><code>cloudflare/cfssl</code></a
+        >. It has sane defaults and is constantly updated with best practices.
+        We've compiled it to
+        <a href="https://github.com/golang/go/wiki/WebAssembly" target="_blank"
+          >WebAssembly</a
+        >
+        to generate certs in your browser.
+      </p>
+      <form>
+        <b>Try it out. </b>
+        <div class="formfield">
+          <label for="root_common_name">CA common name:</label>
+          <input
+            type="text"
+            id="root_common_name"
+            name="root_common_name"
+            placeholder="CA"
+          />
+        </div>
+        <div class="formfield">
+          <label for="server_common_name">Server common name:</label>
+          <input
+            type="text"
+            id="server_common_name"
+            name="server_common_name"
+            placeholder="TLSCerts Co."
+          />
+        </div>
+        <div class="formfield">
+          <label for="server_hosts">Server hosts:</label>
+          <input
+            type="text"
+            id="server_hosts"
+            name="server_hosts"
+            placeholder="localhost,tlscerts.dev"
+          />
+        </div>
+        <div class="formfield">
+          <label for="client_common_name">Client common name:</label>
+          <input
+            type="text"
+            id="client_common_name"
+            name="client_common_name"
+            placeholder="George"
+          />
+        </div>
+        <div class="button_wrapper">
+          <button type="button" onClick="run();">Generate</button>
+        </div>
+      </form>
+      <p>
+        <b>Code samples. </b>Here are some examples of doing mTLS in various
+        languages.
+      </p>
+    </div>
   </body>
 </html>
