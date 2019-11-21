@@ -1,0 +1,14 @@
+version: '3'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./${LANGUAGE}/Dockerfile.server
+    ports:
+        - "443"
+  client:
+    build:
+      context: .
+      dockerfile: ./${LANGUAGE}/Dockerfile.client
+    depends_on:
+      - server

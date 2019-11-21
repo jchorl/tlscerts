@@ -35,3 +35,21 @@ test:
 		-u $(UID):$(GID) \
 		jchorl/golang \
 		go test .
+
+integration-build:
+	docker run -it --rm \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v $(PWD):$(PWD):ro \
+		-w $(PWD)/examples \
+		--env=LANGUAGE=go \
+		docker/compose:1.24.1 \
+		build
+
+integration:
+	docker run -it --rm \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v $(PWD):$(PWD):ro \
+		-w $(PWD)/examples \
+		--env=LANGUAGE=go \
+		docker/compose:1.24.1 \
+		run client

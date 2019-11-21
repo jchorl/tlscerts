@@ -3,6 +3,7 @@
 package main
 
 import (
+	"net/url"
 	"syscall/js"
 
 	"github.com/cloudflare/cfssl/log"
@@ -38,7 +39,30 @@ func run(this js.Value, inputs []js.Value) interface{} {
 	log.Infof("client public: %s", clientBundle.Public)
 	log.Infof("client private: %s", clientBundle.Private)
 
+	downloadAll(caBundle, serverBundle, clientBundle)
+
 	return nil
+}
+
+func downloadAll(caBundle, serverBundle, clientBundle CertBundle) {
+	download("ca-key.pem", caBundle.Private)
+	download("ca.pem", caBundle.Public)
+	download("server-key.pem", serverBundle.Private)
+	download("server.pem", serverBundle.Public)
+	download("client-key.pem", clientBundle.Private)
+	download("client.pem", clientBundle.Public)
+}
+
+func download(filename string, contents []byte) {
+	escaped := url.PathEscape(string(contents))
+	document := js.Global().Get("document")
+	a := document.Call("createElement", "a")
+	a.Set("href", "data:text/plain;charset=utf-8,"+escaped)
+	a.Set("download", filename)
+	a.Set("style", "display: none;")
+	document.Get("body").Call("appendChild", a)
+	a.Call("click")
+	document.Get("body").Call("removeChild", a)
 }
 
 func registerRunFunc() {

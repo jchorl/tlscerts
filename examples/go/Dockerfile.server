@@ -1,0 +1,5 @@
+FROM golang:1.13
+
+COPY go/server.go ./
+COPY testdata/ca.pem testdata/server.pem testdata/server-key.pem ./
+CMD go run server.go
