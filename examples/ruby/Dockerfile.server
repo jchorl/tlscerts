@@ -1,0 +1,6 @@
+FROM ruby:2.6
+
+RUN gem install webrick
+COPY testdata/ca.pem testdata/server.pem testdata/server-key.pem ./
+COPY ruby/server.rb ./
+CMD ruby server.rb

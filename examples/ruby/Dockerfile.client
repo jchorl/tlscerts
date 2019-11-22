@@ -1,0 +1,6 @@
+FROM ruby:2.6
+
+RUN gem install faraday
+COPY testdata/ca.pem testdata/client.pem testdata/client-key.pem ./
+COPY ruby/client.rb ./
+CMD ruby client.rb
