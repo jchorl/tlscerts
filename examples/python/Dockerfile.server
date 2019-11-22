@@ -1,0 +1,7 @@
+FROM python:3.8
+
+RUN pip install flask
+COPY testdata/ca.pem testdata/server.pem testdata/server-key.pem ./
+COPY python/server.py ./
+ENV FLASK_APP=server.py
+CMD flask run
