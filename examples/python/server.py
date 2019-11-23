@@ -8,5 +8,8 @@ def index():
     return 'Hi!'
 
 ctx = ssl.create_default_context(capath='./ca.pem')
-ctx.load_cert_chain(certfile='./server.pem', keyfile='./server-key.pem')
+ctx.load_cert_chain(
+    certfile='./server.pem',
+    keyfile='./server-key.pem',
+)
 app.run(debug=False, ssl_context=ctx)

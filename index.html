@@ -32,8 +32,18 @@
           js: "js",
           ruby: "rb"
         };
+        const labels = {
+          go: "Go",
+          python: "Python",
+          js: "Javascript",
+          ruby: "Ruby"
+        };
 
-        const codeSamplesSection = document.getElementById("code_samples");
+        const clientSection = document.getElementById("client_sample");
+        const serverSection = document.getElementById("server_sample");
+        const languagePicker = document.getElementById("language_picker");
+        const badgeEls = [];
+        const preEls = [];
 
         Promise.all(
           languages.map(lang => {
@@ -51,7 +61,38 @@
 
                 const clientPre = document.createElement("pre");
                 clientPre.appendChild(clientCode);
-                codeSamplesSection.appendChild(clientPre);
+                preEls.push(clientPre);
+                clientSection.appendChild(clientPre);
+
+                const serverCode = document.createElement("code");
+                serverCode.className = `language-${lang}`;
+                serverCode.innerHTML = server;
+
+                const serverPre = document.createElement("pre");
+                serverPre.appendChild(serverCode);
+                preEls.push(serverPre);
+                serverSection.appendChild(serverPre);
+
+                const langBadge = document.createElement("code");
+                langBadge.className = "badge";
+                langBadge.innerHTML = labels[lang];
+                langBadge.onclick = () => {
+                  badgeEls.forEach(el => el.classList.add("inactive"));
+                  preEls.forEach(el => el.classList.add("hidden"));
+
+                  clientPre.classList.remove("hidden");
+                  serverPre.classList.remove("hidden");
+                  langBadge.classList.remove("inactive");
+                };
+                badgeEls.push(langBadge);
+
+                if (lang !== languages[0]) {
+                  clientPre.className = "hidden";
+                  serverPre.className = "hidden";
+                  langBadge.className = "badge inactive";
+                }
+
+                languagePicker.append(langBadge);
               });
           })
         ).then(Prism.highlightAll);
@@ -90,6 +131,13 @@
         color: inherit;
         font-size: inherit;
         font-weight: 700;
+        margin: 0;
+      }
+
+      h3 {
+        color: inherit;
+        font-size: inherit;
+        font-weight: 400;
         margin: 0;
       }
 
@@ -167,6 +215,30 @@
         display: flex;
         margin-top: 20px;
         justify-content: center;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .badge {
+        margin: 0 10px;
+        padding: 4px 15px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        background: #3e78b2;
+        color: white;
+      }
+
+      .badge.inactive {
+        background: #f1f3f7;
+        color: inherit;
+      }
+
+      #client_sample,
+      #server_sample {
+        font-size: 14px;
       }
     </style>
   </head>
@@ -250,8 +322,20 @@
         <p>
           Here are some examples of doing mTLS in various languages.
         </p>
+        <div id="language_picker">
+          Language:
+        </div>
       </section>
-      <div id="code_samples"></div>
+      <div>
+        <section>
+          <h3>Server:</h3>
+        </section>
+        <div id="server_sample"></div>
+        <section>
+          <h3>Client:</h3>
+        </section>
+        <div id="client_sample"></div>
+      </div>
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-core.min.js"
