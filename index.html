@@ -86,6 +86,13 @@
         font-weight: 700;
       }
 
+      h2 {
+        color: inherit;
+        font-size: inherit;
+        font-weight: 700;
+        margin: 0;
+      }
+
       form {
         padding: 20px 50px;
         margin-bottom: 0;
@@ -103,6 +110,11 @@
         width: 200px;
       }
 
+      input:focus {
+        outline: none;
+        border-color: #3e78b2;
+      }
+
       b {
         font-weight: 700;
         color: #212121;
@@ -116,10 +128,16 @@
         font-weight: 700;
         border-radius: 4px;
         width: 200px;
+        cursor: pointer;
+      }
+
+      section {
+        padding: 0 50px;
+        margin: 20px 0;
       }
 
       p {
-        padding: 0 50px;
+        margin: 10px 0;
       }
 
       .panel {
@@ -127,7 +145,7 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        max-width: 600px;
+        max-width: 800px;
         box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
         background-color: white;
       }
@@ -160,69 +178,79 @@
         </h1>
         // Generating TLS certs doesn't have to be hard.
       </div>
-      <p>
-        <b>The problem. </b>Generating TLS certs for testing is difficult. Most
-        guides have incomprehensible commands that require security knowledge to
-        operate.
-      </p>
-      <p>
-        <b>The solution. </b>Cloudflare open-sourced their well-trusted Golang
-        TLS library,
-        <a href="https://github.com/cloudflare/cfssl" target="_blank"
-          ><code>cloudflare/cfssl</code></a
-        >. It has sane defaults and is constantly updated with best practices.
-        We've compiled it to
-        <a href="https://github.com/golang/go/wiki/WebAssembly" target="_blank"
-          >WebAssembly</a
-        >
-        to generate certs in your browser.
-      </p>
-      <form>
-        <b>Try it out. </b>
-        <div class="formfield">
-          <label for="root_common_name">CA common name:</label>
-          <input
-            type="text"
-            id="root_common_name"
-            name="root_common_name"
-            placeholder="CA"
-          />
-        </div>
-        <div class="formfield">
-          <label for="server_common_name">Server common name:</label>
-          <input
-            type="text"
-            id="server_common_name"
-            name="server_common_name"
-            placeholder="TLSCerts Co."
-          />
-        </div>
-        <div class="formfield">
-          <label for="server_hosts">Server hosts:</label>
-          <input
-            type="text"
-            id="server_hosts"
-            name="server_hosts"
-            placeholder="localhost,tlscerts.dev"
-          />
-        </div>
-        <div class="formfield">
-          <label for="client_common_name">Client common name:</label>
-          <input
-            type="text"
-            id="client_common_name"
-            name="client_common_name"
-            placeholder="George"
-          />
-        </div>
-        <div class="button_wrapper">
-          <button type="button" onClick="run();">Generate</button>
-        </div>
-      </form>
-      <p>
-        <b>Code samples. </b>Here are some examples of doing mTLS in various
-        languages.
-      </p>
+      <section>
+        <h2>The problem.</h2>
+        <p>
+          Generating TLS certs for testing is difficult. Most guides have
+          incomprehensible commands that require security knowledge to operate.
+        </p>
+      </section>
+      <section>
+        <h2>The solution.</h2>
+        <p>
+          Cloudflare open-sourced their well-trusted Golang TLS library,
+          <a href="https://github.com/cloudflare/cfssl" target="_blank"
+            ><code>cloudflare/cfssl</code></a
+          >. It has sane defaults and is constantly updated with best practices.
+          We've compiled it to
+          <a
+            href="https://github.com/golang/go/wiki/WebAssembly"
+            target="_blank"
+            >WebAssembly</a
+          >
+          to generate certs in your browser.
+        </p>
+      </section>
+      <section>
+        <h2>Try it out.</h2>
+        <form>
+          <div class="formfield">
+            <label for="root_common_name">CA common name:</label>
+            <input
+              type="text"
+              id="root_common_name"
+              name="root_common_name"
+              placeholder="CA"
+            />
+          </div>
+          <div class="formfield">
+            <label for="server_common_name">Server common name:</label>
+            <input
+              type="text"
+              id="server_common_name"
+              name="server_common_name"
+              placeholder="TLSCerts Co."
+            />
+          </div>
+          <div class="formfield">
+            <label for="server_hosts">Server hosts:</label>
+            <input
+              type="text"
+              id="server_hosts"
+              name="server_hosts"
+              placeholder="localhost,tlscerts.dev"
+            />
+          </div>
+          <div class="formfield">
+            <label for="client_common_name">Client common name:</label>
+            <input
+              type="text"
+              id="client_common_name"
+              name="client_common_name"
+              placeholder="George"
+            />
+          </div>
+          <div class="button_wrapper">
+            <button type="button" onClick="run();">Generate</button>
+          </div>
+        </form>
+      </section>
+      <section>
+        <h2>Code samples.</h2>
+        <p>
+          Here are some examples of doing mTLS in various languages.
+        </p>
+      </section>
       <div id="code_samples"></div>
     </div>
     <script
