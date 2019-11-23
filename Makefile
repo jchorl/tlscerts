@@ -41,7 +41,7 @@ integration-build:
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(PWD):$(PWD):ro \
 		-w $(PWD)/examples \
-		--env=LANGUAGE=ruby \
+		--env=LANGUAGE=js \
 		docker/compose:1.24.1 \
 		build
 
@@ -50,6 +50,6 @@ integration:
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(PWD):$(PWD):ro \
 		-w $(PWD)/examples \
-		--env=LANGUAGE=ruby \
+		--env=LANGUAGE=js \
 		docker/compose:1.24.1 \
 		run client

@@ -1,0 +1,5 @@
+FROM node:13.1
+
+COPY js/client.js ./
+COPY testdata/ca.pem testdata/client.pem testdata/client-key.pem ./
+CMD node client.js
