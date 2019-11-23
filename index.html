@@ -29,6 +29,15 @@
       // });
 
       window.onload = function() {
+        document.getElementById("advanced").onclick = () => {
+          const advancedArrow = document.getElementById("advanced_arrow");
+          advancedArrow.classList.toggle("fa-caret-right");
+          advancedArrow.classList.toggle("fa-caret-down");
+
+          const advancedContents = document.getElementById("advanced_contents");
+          advancedContents.classList.toggle("show");
+        };
+
         const languages = ["go", "python", "js", "ruby"];
         const extensions = {
           go: "go",
@@ -237,6 +246,23 @@
         display: block;
       }
 
+      #advanced .expand_button {
+        cursor: pointer;
+      }
+
+      #advanced #advanced_arrow {
+        margin-right: 10px;
+      }
+
+      #advanced #advanced_contents {
+        display: none;
+        margin-left: 26px;
+      }
+
+      #advanced #advanced_contents.show {
+        display: block;
+      }
+
       .button_wrapper {
         display: flex;
         margin-top: 20px;
@@ -303,52 +329,6 @@
         <h2>Try it out.</h2>
         <form>
           <div class="formfield">
-            <label for="root_common_name"
-              >CA common name:
-              <div class="popup">
-                <i class="fa fa-question-circle" aria-hidden="true"></i>
-                <div class="contents">
-                  The Common Name represents the name of the issuing authority.
-                  Read more
-                  <a
-                    href="https://support.dnsimple.com/articles/what-is-common-name/"
-                    target="_blank"
-                    >here</a
-                  >.
-                </div>
-              </div></label
-            >
-            <input
-              type="text"
-              id="root_common_name"
-              name="root_common_name"
-              placeholder="CA"
-            />
-          </div>
-          <div class="formfield">
-            <label for="server_common_name"
-              >Server common name:
-              <div class="popup">
-                <i class="fa fa-question-circle" aria-hidden="true"></i>
-                <div class="contents">
-                  The Common Name represents the server name protected by the
-                  SSL certificate. Read more
-                  <a
-                    href="https://support.dnsimple.com/articles/what-is-common-name/"
-                    target="_blank"
-                    >here</a
-                  >.
-                </div>
-              </div></label
-            >
-            <input
-              type="text"
-              id="server_common_name"
-              name="server_common_name"
-              placeholder="TLSCerts Co."
-            />
-          </div>
-          <div class="formfield">
             <label for="server_hosts"
               >Server hosts:
               <div class="popup">
@@ -367,28 +347,86 @@
               placeholder="localhost,tlscerts.dev"
             />
           </div>
-          <div class="formfield">
-            <label for="client_common_name"
-              >Client common name:
-              <div class="popup">
-                <i class="fa fa-question-circle" aria-hidden="true"></i>
-                <div class="contents">
-                  The Common Name represents the server name protected by the
-                  SSL certificate. Read more
-                  <a
-                    href="https://support.dnsimple.com/articles/what-is-common-name/"
-                    target="_blank"
-                    >here</a
-                  >.
-                </div>
-              </div></label
-            >
-            <input
-              type="text"
-              id="client_common_name"
-              name="client_common_name"
-              placeholder="George"
-            />
+          <div id="advanced">
+            <div class="expand_button">
+              <i
+                id="advanced_arrow"
+                class="fa fa-caret-right"
+                aria-hidden="true"
+              ></i>
+              Advanced
+            </div>
+            <div id="advanced_contents">
+              <div class="formfield">
+                <label for="root_common_name"
+                  >CA common name:
+                  <div class="popup">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    <div class="contents">
+                      The Common Name represents the name of the issuing
+                      authority. Read more
+                      <a
+                        href="https://support.dnsimple.com/articles/what-is-common-name/"
+                        target="_blank"
+                        >here</a
+                      >.
+                    </div>
+                  </div></label
+                >
+                <input
+                  type="text"
+                  id="root_common_name"
+                  name="root_common_name"
+                  placeholder="CA"
+                />
+              </div>
+              <div class="formfield">
+                <label for="server_common_name"
+                  >Server common name:
+                  <div class="popup">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    <div class="contents">
+                      The Common Name represents the server name protected by
+                      the SSL certificate. Read more
+                      <a
+                        href="https://support.dnsimple.com/articles/what-is-common-name/"
+                        target="_blank"
+                        >here</a
+                      >.
+                    </div>
+                  </div></label
+                >
+                <input
+                  type="text"
+                  id="server_common_name"
+                  name="server_common_name"
+                  placeholder="TLSCerts Co."
+                />
+              </div>
+              <div class="formfield">
+                <label for="client_common_name"
+                  >Client common name:
+                  <div class="popup">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    <div class="contents">
+                      The Common Name represents the server name protected by
+                      the SSL certificate. Read more
+                      <a
+                        href="https://support.dnsimple.com/articles/what-is-common-name/"
+                        target="_blank"
+                        >here</a
+                      >.
+                    </div>
+                  </div></label
+                >
+                <input
+                  type="text"
+                  id="client_common_name"
+                  name="client_common_name"
+                  placeholder="George"
+                />
+              </div>
+            </div>
           </div>
           <div class="button_wrapper">
             <button type="button" onClick="run();">Generate</button>
