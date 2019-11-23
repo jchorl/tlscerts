@@ -7,6 +7,10 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
     <script>
       if (!WebAssembly.instantiateStreaming) {
         // polyfill
@@ -211,6 +215,28 @@
         justify-content: space-between;
       }
 
+      .popup {
+        display: inline;
+        position: relative;
+        padding: 8px;
+      }
+
+      .popup .contents {
+        display: none;
+        position: absolute;
+        left: -150px;
+        background: #f1f3f7;
+        width: 300px;
+        padding: 20px;
+        box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+        font-size: 14px;
+        z-index: 1000;
+      }
+
+      .popup:hover .contents {
+        display: block;
+      }
+
       .button_wrapper {
         display: flex;
         margin-top: 20px;
@@ -277,7 +303,21 @@
         <h2>Try it out.</h2>
         <form>
           <div class="formfield">
-            <label for="root_common_name">CA common name:</label>
+            <label for="root_common_name"
+              >CA common name:
+              <div class="popup">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                <div class="contents">
+                  The Common Name represents the name of the issuing authority.
+                  Read more
+                  <a
+                    href="https://support.dnsimple.com/articles/what-is-common-name/"
+                    target="_blank"
+                    >here</a
+                  >.
+                </div>
+              </div></label
+            >
             <input
               type="text"
               id="root_common_name"
@@ -286,7 +326,21 @@
             />
           </div>
           <div class="formfield">
-            <label for="server_common_name">Server common name:</label>
+            <label for="server_common_name"
+              >Server common name:
+              <div class="popup">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                <div class="contents">
+                  The Common Name represents the server name protected by the
+                  SSL certificate. Read more
+                  <a
+                    href="https://support.dnsimple.com/articles/what-is-common-name/"
+                    target="_blank"
+                    >here</a
+                  >.
+                </div>
+              </div></label
+            >
             <input
               type="text"
               id="server_common_name"
@@ -295,7 +349,17 @@
             />
           </div>
           <div class="formfield">
-            <label for="server_hosts">Server hosts:</label>
+            <label for="server_hosts"
+              >Server hosts:
+              <div class="popup">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                <div class="contents">
+                  This is the hostname of your server. If you're just using
+                  these for local development, it should probably be
+                  <code>localhost</code>.
+                </div>
+              </div></label
+            >
             <input
               type="text"
               id="server_hosts"
@@ -304,7 +368,21 @@
             />
           </div>
           <div class="formfield">
-            <label for="client_common_name">Client common name:</label>
+            <label for="client_common_name"
+              >Client common name:
+              <div class="popup">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                <div class="contents">
+                  The Common Name represents the server name protected by the
+                  SSL certificate. Read more
+                  <a
+                    href="https://support.dnsimple.com/articles/what-is-common-name/"
+                    target="_blank"
+                    >here</a
+                  >.
+                </div>
+              </div></label
+            >
             <input
               type="text"
               id="client_common_name"
