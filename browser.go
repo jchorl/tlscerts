@@ -26,8 +26,8 @@ func run(this js.Value, inputs []js.Value) interface{} {
 		CommonName: strOrDefault(serverCommonName, "localhost"),
 		Hosts:      strOrDefault(serverHostsJoined, "localhost,mtls.dev"),
 		Expiration: strOrDefault(serverExpiration, defaultConfig.ExpiryString),
-		CAPublic:   caBundle.Public,
-		CAPrivate:  caBundle.Private,
+		CACert:     caBundle.Cert,
+		CAKey:      caBundle.Key,
 	}
 
 	serverBundle, err := generateServerCert(serverConf)
@@ -41,8 +41,8 @@ func run(this js.Value, inputs []js.Value) interface{} {
 	clientConf := CertConfig{
 		CommonName: strOrDefault(clientCommonName, "localhost"),
 		Expiration: strOrDefault(clientExpiration, defaultConfig.ExpiryString),
-		CAPublic:   caBundle.Public,
-		CAPrivate:  caBundle.Private,
+		CACert:     caBundle.Cert,
+		CAKey:      caBundle.Key,
 	}
 
 	clientBundle, err := generateClientCert(clientConf)
@@ -53,12 +53,12 @@ func run(this js.Value, inputs []js.Value) interface{} {
 }
 
 func downloadAll(caBundle, serverBundle, clientBundle CertBundle) {
-	download("ca-key.pem", caBundle.Private)
-	download("ca.pem", caBundle.Public)
-	download("server-key.pem", serverBundle.Private)
-	download("server.pem", serverBundle.Public)
-	download("client-key.pem", clientBundle.Private)
-	download("client.pem", clientBundle.Public)
+	download("ca-key.pem", caBundle.Key)
+	download("ca.pem", caBundle.Cert)
+	download("server-key.pem", serverBundle.Key)
+	download("server.pem", serverBundle.Cert)
+	download("client-key.pem", clientBundle.Key)
+	download("client.pem", clientBundle.Cert)
 }
 
 func download(filename string, contents []byte) {

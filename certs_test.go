@@ -17,12 +17,12 @@ func TestCertExpiryServer(t *testing.T) {
 		CommonName: "mtls.dev",
 		Hosts:      "127.0.0.1",
 		Expiration: "127h",
-		CAPublic:   caBundle.Public,
-		CAPrivate:  caBundle.Private,
+		CACert:     caBundle.Cert,
+		CAKey:      caBundle.Key,
 	})
 	require.NoError(t, err)
 
-	certDERBlock, _ := pem.Decode(serverBundle.Public)
+	certDERBlock, _ := pem.Decode(serverBundle.Cert)
 	cert, err := x509.ParseCertificate(certDERBlock.Bytes)
 	require.NoError(t, err)
 
@@ -39,12 +39,12 @@ func TestCertExpiryClient(t *testing.T) {
 		CommonName: "mtls.dev",
 		Hosts:      "127.0.0.1",
 		Expiration: "127h",
-		CAPublic:   caBundle.Public,
-		CAPrivate:  caBundle.Private,
+		CACert:     caBundle.Cert,
+		CAKey:      caBundle.Key,
 	})
 	require.NoError(t, err)
 
-	certDERBlock, _ := pem.Decode(clientBundle.Public)
+	certDERBlock, _ := pem.Decode(clientBundle.Cert)
 	cert, err := x509.ParseCertificate(certDERBlock.Bytes)
 	require.NoError(t, err)
 

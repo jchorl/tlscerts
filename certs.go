@@ -16,8 +16,8 @@ import (
 
 // CertBundle just packages up a public cert and private key together
 type CertBundle struct {
-	Public  []byte
-	Private []byte
+	Cert []byte
+	Key  []byte
 }
 
 // CertConfig lays out some config options for generating a cert
@@ -25,8 +25,8 @@ type CertConfig struct {
 	CommonName string
 	Hosts      string
 	Expiration string
-	CAPublic   []byte
-	CAPrivate  []byte
+	CACert     []byte
+	CAKey      []byte
 }
 
 func generateCACert(commonName string) (CertBundle, error) {
@@ -40,7 +40,7 @@ func generateCACert(commonName string) (CertBundle, error) {
 		return CertBundle{}, fmt.Errorf("initca.New(...): %w", err)
 	}
 
-	return CertBundle{Public: cert, Private: key}, nil
+	return CertBundle{Cert: cert, Key: key}, nil
 }
 
 func generateServerCert(cfg CertConfig) (CertBundle, error) {
@@ -55,7 +55,7 @@ func generateServerCert(cfg CertConfig) (CertBundle, error) {
 		srvConfig.Signing.Profiles["www"].ExpiryString = parsed.String()
 	}
 
-	return generateCert(cfg.CommonName, hosts, "www", srvConfig.Signing, cfg.CAPublic, cfg.CAPrivate)
+	return generateCert(cfg.CommonName, hosts, "www", srvConfig.Signing, cfg.CACert, cfg.CAKey)
 }
 
 func generateClientCert(cfg CertConfig) (CertBundle, error) {
@@ -68,7 +68,7 @@ func generateClientCert(cfg CertConfig) (CertBundle, error) {
 		cliConfig.Signing.Profiles["client"].Expiry = parsed
 		cliConfig.Signing.Profiles["client"].ExpiryString = parsed.String()
 	}
-	return generateCert(cfg.CommonName, nil, "client", cliConfig.Signing, cfg.CAPublic, cfg.CAPrivate)
+	return generateCert(cfg.CommonName, nil, "client", cliConfig.Signing, cfg.CACert, cfg.CAKey)
 }
 
 func generateCert(commonName string, hosts []string, profile string, signingConfig *config.Signing, ca []byte, caKey []byte) (CertBundle, error) {
@@ -113,7 +113,7 @@ func generateCert(commonName string, hosts []string, profile string, signingConf
 	}
 
 	return CertBundle{
-		Public:  cert,
-		Private: key,
+		Cert: cert,
+		Key:  key,
 	}, nil
 }

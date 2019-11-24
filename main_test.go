@@ -20,24 +20,24 @@ func TestMTLS(t *testing.T) {
 	serverBundle, err := generateServerCert(CertConfig{
 		CommonName: "mtls.dev",
 		Hosts:      "127.0.0.1",
-		CAPublic:   caBundle.Public,
-		CAPrivate:  caBundle.Private,
+		CACert:     caBundle.Cert,
+		CAKey:      caBundle.Key,
 	})
 	require.NoError(t, err)
 
 	clientBundle, err := generateServerCert(CertConfig{
 		CommonName: "mtls.dev",
-		CAPublic:   caBundle.Public,
-		CAPrivate:  caBundle.Private,
+		CACert:     caBundle.Cert,
+		CAKey:      caBundle.Key,
 	})
 	require.NoError(t, err)
 
-	serverTLSConf := getTLSConfig(t, serverBundle.Public, serverBundle.Private, caBundle.Public, true)
+	serverTLSConf := getTLSConfig(t, serverBundle.Cert, serverBundle.Key, caBundle.Cert, true)
 
 	srv := newTestServer(t, serverTLSConf)
 	defer srv.Close()
 
-	clientTLSConf := getTLSConfig(t, clientBundle.Public, clientBundle.Private, caBundle.Public, false)
+	clientTLSConf := getTLSConfig(t, clientBundle.Cert, clientBundle.Key, caBundle.Cert, false)
 
 	client := srv.Client()
 	client.Transport = &http.Transport{
@@ -53,16 +53,16 @@ func TestMTLS(t *testing.T) {
 	assert.Equal(t, []byte("hi!\n"), body)
 }
 
-func getTLSConfig(t *testing.T, public, private, caPublic []byte, isServer bool) *tls.Config {
-	cert, err := tls.X509KeyPair(public, private)
+func getTLSConfig(t *testing.T, cert, key, caCert []byte, isServer bool) *tls.Config {
+	pair, err := tls.X509KeyPair(cert, key)
 	require.NoError(t, err)
 
 	conf := &tls.Config{
-		Certificates: []tls.Certificate{cert},
+		Certificates: []tls.Certificate{pair},
 	}
 
 	certPool := x509.NewCertPool()
-	certPool.AppendCertsFromPEM(caPublic)
+	certPool.AppendCertsFromPEM(caCert)
 
 	if isServer {
 		conf.ClientCAs = certPool
