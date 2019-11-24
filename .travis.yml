@@ -1,0 +1,25 @@
+language: go
+
+services:
+  - docker
+
+before_install:
+  - docker build -t jchorl/golang .
+
+script:
+  - go test .
+  - cd examples
+  - LANGUAGE=js docker-compose build
+  - LANGUAGE=js docker-compose run client
+  - LANGUAGE=python docker-compose build
+  - LANGUAGE=python docker-compose run client
+  - LANGUAGE=go docker-compose build
+  - LANGUAGE=go docker-compose run client
+  - LANGUAGE=ruby docker-compose build
+  - LANGUAGE=ruby docker-compose run client
+
+# deploy:
+#   provider: netlify
+#   site: 6e10df31-caed-4f73-8760-490d9f78db01
+#   auth: <encrypted auth>
+#   edge: true # opt in to dpl v2
