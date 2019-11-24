@@ -4,6 +4,6 @@ RUN git clone https://go.googlesource.com/go goroot && \
     cd goroot && \
     git checkout master && \
     cd src && \
-    ./all.bash
+    ./make.bash
 
 ENV PATH="/go/goroot/bin:${PATH}"

@@ -7,8 +7,8 @@ before_install:
   - docker build -t jchorl/golang .
 
 script:
-  - go test .
-  - cd examples
+  - docker run -v ${TRAVIS_BUILD_DIR}:/src:ro -w /src jchorl/golang go test .
+  - cd ${TRAVIS_BUILD_DIR}/examples
   - LANGUAGE=js docker-compose build
   - LANGUAGE=js docker-compose run client
   - LANGUAGE=python docker-compose build
@@ -17,9 +17,10 @@ script:
   - LANGUAGE=go docker-compose run client
   - LANGUAGE=ruby docker-compose build
   - LANGUAGE=ruby docker-compose run client
+  - docker run -e GOOS=js -e GOARCH=wasm -v ${TRAVIS_BUILD_DIR}:/src -w /src jchorl/golang go build -o main.wasm
 
-# deploy:
-#   provider: netlify
-#   site: 6e10df31-caed-4f73-8760-490d9f78db01
-#   auth: <encrypted auth>
-#   edge: true # opt in to dpl v2
+    # deploy:
+    #   provider: netlify
+    #   site: 6e10df31-caed-4f73-8760-490d9f78db01
+    #   auth: o3T02PK5e3ABRqcxORSS/Ce7uL9/rUOm89vMO67UZ4LfxuOIValJYL20v+a5TzW4abnSCsewU9oP6G+Fb/EkCwU20tFPGKbPH7AFDqkmlGLb/qwEl0aw0qN9pKz34VHdvCi3WCyRSw/YfLIBwYzbjXmfMk8ek30hAGnJ2yWlBvsF32iCqmEcDqxbPu2oRMXQ/RVeXXRbrkuBAlRh2uNKeHu2wpvscrNFXcG7XXhOMtHZxx/WKzPVSM2on/lCwG8md76WcJjKxfPqmaedzcBQAsSm9/lahJQFPawLk20NYfCrDXLTIR6N4tLiUXjfQ4642OGxeN9oUabEMakjLByeekRNzd6rI60juBvHSYtTuouRntjoNCURlkipDI3b8F2qJfxS9/cAu6NUudLcoO6nzS6Ugbci9IbGrA24Lqwbq0Qr1C77yqLNeY7xYvEgC1PQdajNGzYYyLJjcnuQqPz/q8WL+ENCIQptJtMXg5V32euqy0RAxfBlkbek8QMAx+IrCbkB126QtGwg/8rcqOOZaene7rdV8Qmm/xHB2bUEMHWLJ9Hb3uSFIQHkpLYEauohxr5/eTAraKmAEeiZgG5g3/47DTaDix9wz+Z8aJzFU40lkPw9OFiQY6/+0bghCrPHERKaz8X+nFpEiS0WqtEfqEsyPCMdjgAouyB9cBVkQOY=
+    #   edge: true # opt in to dpl v2

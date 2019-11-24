@@ -28,7 +28,7 @@ Generating mTLS certs and using them is more challenging than it needs to be.
         cd goroot && \
         git checkout master && \
         cd src && \
-        ./all.bash
+        ./make.bash
 
     ENV PATH="/go/goroot/bin:${PATH}"
     ```
