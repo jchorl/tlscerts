@@ -11,6 +11,7 @@ import (
 
 func run(this js.Value, inputs []js.Value) interface{} {
 	caCommonName := js.Global().Get("document").Call("getElementById", "root_common_name").Get("value").String()
+	caCommonName = strOrDefault(caCommonName, "mtls.dev")
 
 	caBundle, err := generateCACert(caCommonName)
 	if err != nil {
@@ -18,26 +19,33 @@ func run(this js.Value, inputs []js.Value) interface{} {
 		return nil
 	}
 
-	log.Infof("root public: %s", caBundle.Public)
-	log.Infof("root private: %s", caBundle.Private)
-
 	serverCommonName := js.Global().Get("document").Call("getElementById", "server_common_name").Get("value").String()
 	serverHostsJoined := js.Global().Get("document").Call("getElementById", "server_hosts").Get("value").String()
+	serverExpiration := js.Global().Get("document").Call("getElementById", "server_duration").Get("value").String()
+	serverConf := CertConfig{
+		CommonName: strOrDefault(serverCommonName, "localhost"),
+		Hosts:      strOrDefault(serverHostsJoined, "localhost,mtls.dev"),
+		Expiration: strOrDefault(serverExpiration, defaultConfig.ExpiryString),
+		CAPublic:   caBundle.Public,
+		CAPrivate:  caBundle.Private,
+	}
 
-	serverBundle, err := generateServerCert(serverCommonName, serverHostsJoined, caBundle.Public, caBundle.Private)
+	serverBundle, err := generateServerCert(serverConf)
 	if err != nil {
 		log.Errorf("generateServerCert(%s, %s): %s", serverCommonName, serverHostsJoined, err)
 		return nil
 	}
 
-	log.Infof("server public: %s", serverBundle.Public)
-	log.Infof("server private: %s", serverBundle.Private)
-
 	clientCommonName := js.Global().Get("document").Call("getElementById", "client_common_name").Get("value").String()
-	clientBundle, err := generateClientCert(clientCommonName, caBundle.Public, caBundle.Private)
+	clientExpiration := js.Global().Get("document").Call("getElementById", "client_duration").Get("value").String()
+	clientConf := CertConfig{
+		CommonName: strOrDefault(clientCommonName, "localhost"),
+		Expiration: strOrDefault(clientExpiration, defaultConfig.ExpiryString),
+		CAPublic:   caBundle.Public,
+		CAPrivate:  caBundle.Private,
+	}
 
-	log.Infof("client public: %s", clientBundle.Public)
-	log.Infof("client private: %s", clientBundle.Private)
+	clientBundle, err := generateClientCert(clientConf)
 
 	downloadAll(caBundle, serverBundle, clientBundle)
 
@@ -67,4 +75,12 @@ func download(filename string, contents []byte) {
 
 func registerRunFunc() {
 	js.Global().Set("run", js.FuncOf(run))
+}
+
+func strOrDefault(str string, def string) string {
+	if str != "" {
+		return str
+	}
+
+	return def
 }

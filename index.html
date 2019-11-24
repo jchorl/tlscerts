@@ -21,15 +21,15 @@
       }
 
       const go = new Go();
-      // WebAssembly.instantiateStreaming(
-      //   fetch("main.wasm"),
-      //   go.importObject
-      // ).then(result => {
-      //   go.run(result.instance);
-      // });
+      WebAssembly.instantiateStreaming(
+        fetch("main.wasm"),
+        go.importObject
+      ).then(result => {
+        go.run(result.instance);
+      });
 
       window.onload = function() {
-        document.getElementById("advanced").onclick = () => {
+        document.getElementById("expand_button").onclick = () => {
           const advancedArrow = document.getElementById("advanced_arrow");
           advancedArrow.classList.toggle("fa-caret-right");
           advancedArrow.classList.toggle("fa-caret-down");
@@ -246,7 +246,7 @@
         display: block;
       }
 
-      #advanced .expand_button {
+      #advanced #expand_button {
         cursor: pointer;
       }
 
@@ -348,7 +348,7 @@
             />
           </div>
           <div id="advanced">
-            <div class="expand_button">
+            <div id="expand_button">
               <i
                 id="advanced_arrow"
                 class="fa fa-caret-right"
@@ -404,6 +404,28 @@
                 />
               </div>
               <div class="formfield">
+                <label for="server_duration"
+                  >Server cert validity duration:
+                  <div class="popup">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    <div class="contents">
+                      How long the server cert is valid for. Formatted as a
+                      <a
+                        href="https://golang.org/pkg/time/#ParseDuration"
+                        target="_blank"
+                        >Go duration</a
+                      >.
+                    </div>
+                  </div></label
+                >
+                <input
+                  type="text"
+                  id="server_duration"
+                  name="server_duration"
+                  placeholder="8760h"
+                />
+              </div>
+              <div class="formfield">
                 <label for="client_common_name"
                   >Client common name:
                   <div class="popup">
@@ -424,6 +446,28 @@
                   id="client_common_name"
                   name="client_common_name"
                   placeholder="George"
+                />
+              </div>
+              <div class="formfield">
+                <label for="client_duration"
+                  >Client cert validity duration:
+                  <div class="popup">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    <div class="contents">
+                      How long the client cert is valid for. Formatted as a
+                      <a
+                        href="https://golang.org/pkg/time/#ParseDuration"
+                        target="_blank"
+                        >Go duration</a
+                      >.
+                    </div>
+                  </div></label
+                >
+                <input
+                  type="text"
+                  id="client_duration"
+                  name="client_duration"
+                  placeholder="8760h"
                 />
               </div>
             </div>

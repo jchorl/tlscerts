@@ -17,10 +17,19 @@ func TestMTLS(t *testing.T) {
 	caBundle, err := generateCACert("CA")
 	require.NoError(t, err)
 
-	serverBundle, err := generateServerCert("Server Co.", "127.0.0.1", caBundle.Public, caBundle.Private)
+	serverBundle, err := generateServerCert(CertConfig{
+		CommonName: "mtls.dev",
+		Hosts:      "127.0.0.1",
+		CAPublic:   caBundle.Public,
+		CAPrivate:  caBundle.Private,
+	})
 	require.NoError(t, err)
 
-	clientBundle, err := generateClientCert("Client Co.", caBundle.Public, caBundle.Private)
+	clientBundle, err := generateServerCert(CertConfig{
+		CommonName: "mtls.dev",
+		CAPublic:   caBundle.Public,
+		CAPrivate:  caBundle.Private,
+	})
 	require.NoError(t, err)
 
 	serverTLSConf := getTLSConfig(t, serverBundle.Public, serverBundle.Private, caBundle.Public, true)

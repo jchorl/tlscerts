@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cloudflare/cfssl/cli/genkey"
 	"github.com/cloudflare/cfssl/config"
 	"github.com/cloudflare/cfssl/csr"
 	"github.com/cloudflare/cfssl/helpers"
 	"github.com/cloudflare/cfssl/initca"
+	"github.com/cloudflare/cfssl/log"
 	"github.com/cloudflare/cfssl/signer"
 	"github.com/cloudflare/cfssl/signer/local"
 )
@@ -16,6 +18,15 @@ import (
 type CertBundle struct {
 	Public  []byte
 	Private []byte
+}
+
+// CertConfig lays out some config options for generating a cert
+type CertConfig struct {
+	CommonName string
+	Hosts      string
+	Expiration string
+	CAPublic   []byte
+	CAPrivate  []byte
 }
 
 func generateCACert(commonName string) (CertBundle, error) {
@@ -32,17 +43,36 @@ func generateCACert(commonName string) (CertBundle, error) {
 	return CertBundle{Public: cert, Private: key}, nil
 }
 
-func generateServerCert(commonName string, hostsJoined string, ca []byte, caKey []byte) (CertBundle, error) {
-	hosts := signer.SplitHosts(hostsJoined)
+func generateServerCert(cfg CertConfig) (CertBundle, error) {
+	hosts := signer.SplitHosts(cfg.Hosts)
+	srvConfig := DefaultServerConfig()
+	if cfg.Expiration != "" {
+		parsed, err := time.ParseDuration(cfg.Expiration)
+		if err != nil {
+			return CertBundle{}, fmt.Errorf("invalid duration %s: %w", cfg.Expiration, err)
+		}
+		srvConfig.Signing.Profiles["www"].Expiry = parsed
+		srvConfig.Signing.Profiles["www"].ExpiryString = parsed.String()
+	}
 
-	return generateCert(commonName, hosts, "www", ServerConfig.Signing, ca, caKey)
+	return generateCert(cfg.CommonName, hosts, "www", srvConfig.Signing, cfg.CAPublic, cfg.CAPrivate)
 }
 
-func generateClientCert(commonName string, ca []byte, caKey []byte) (CertBundle, error) {
-	return generateCert(commonName, nil, "client", ClientConfig.Signing, ca, caKey)
+func generateClientCert(cfg CertConfig) (CertBundle, error) {
+	cliConfig := DefaultClientConfig()
+	if cfg.Expiration != "" {
+		parsed, err := time.ParseDuration(cfg.Expiration)
+		if err != nil {
+			return CertBundle{}, fmt.Errorf("invalid duration %s: %w", cfg.Expiration, err)
+		}
+		cliConfig.Signing.Profiles["client"].Expiry = parsed
+		cliConfig.Signing.Profiles["client"].ExpiryString = parsed.String()
+	}
+	return generateCert(cfg.CommonName, nil, "client", cliConfig.Signing, cfg.CAPublic, cfg.CAPrivate)
 }
 
 func generateCert(commonName string, hosts []string, profile string, signingConfig *config.Signing, ca []byte, caKey []byte) (CertBundle, error) {
+	log.Infof("received cert generate request, commonName=%s, hosts=%v, profile=%s, signingConfig=%+v", commonName, hosts, profile, signingConfig)
 	req := csr.CertificateRequest{
 		CN:         commonName,
 		Hosts:      hosts,
