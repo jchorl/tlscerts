@@ -19,4 +19,4 @@ script:
 deploy:
   provider: script
   skip_cleanup: true
-  script: docker run -e NETLIFY_TOKEN -v ${TRAVIS_BUILD_DIR}:/src:ro -w /src node:13.1 sh -c "npm install -g netlify-cli && netlify deploy --site=6e10df31-caed-4f73-8760-490d9f78db01 --auth=$NETLIFY_TOKEN --prod"
+  script: docker run -e NETLIFY_TOKEN -v ${TRAVIS_BUILD_DIR}:/src:ro -w /src node:13.1 sh -c "npm install -g netlify-cli && netlify deploy --site=6e10df31-caed-4f73-8760-490d9f78db01 --auth=$NETLIFY_TOKEN --dir=. --prod"
