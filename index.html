@@ -157,7 +157,6 @@
       }
 
       form {
-        padding: 20px 50px;
         margin-bottom: 0;
 
         display: flex;
@@ -204,7 +203,7 @@
       }
 
       .panel {
-        margin: 50px auto;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
         align-items: stretch;
@@ -276,7 +275,7 @@
       }
 
       .badge {
-        margin: 0 10px;
+        margin: 0 4px;
         padding: 4px 15px;
         border-radius: 4px;
         font-size: 14px;
@@ -293,6 +292,20 @@
       #client_sample,
       #server_sample {
         font-size: 14px;
+      }
+
+      @media (min-width: 1024px) {
+        form {
+          padding: 20px 50px;
+        }
+
+        .panel {
+          margin: 50px auto;
+        }
+
+        .badge {
+          margin: 0 10px;
+        }
       }
     </style>
   </head>
