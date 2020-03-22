@@ -1,10 +1,8 @@
 language: go
 services:
 - docker
-before_install:
-- docker build -t jchorl/golang .
 script:
-- docker run -v ${TRAVIS_BUILD_DIR}:/src:ro -w /src jchorl/golang go test .
+- docker run -v ${TRAVIS_BUILD_DIR}:/src:ro -w /src golang:1.14.1 go test .
 - cd ${TRAVIS_BUILD_DIR}/examples
 - LANGUAGE=js docker-compose build
 - LANGUAGE=js docker-compose run client
@@ -14,7 +12,7 @@ script:
 - LANGUAGE=go docker-compose run client
 - LANGUAGE=ruby docker-compose build
 - LANGUAGE=ruby docker-compose run client
-- docker run -e GOOS=js -e GOARCH=wasm -v ${TRAVIS_BUILD_DIR}:/src -w /src jchorl/golang
+- docker run -e GOOS=js -e GOARCH=wasm -v ${TRAVIS_BUILD_DIR}:/src -w /src golang:1.14.1
   go build -o main.wasm
 deploy:
   provider: script
