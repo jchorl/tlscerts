@@ -1,4 +1,4 @@
-FROM node:13.1
+FROM node:15.8
 
 COPY js/server.js ./
 COPY testdata/ca.pem testdata/server.pem testdata/server-key.pem ./

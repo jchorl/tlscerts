@@ -13,7 +13,7 @@ prettier:
 	docker run -it --rm \
 		-v $(PWD):/tlscerts \
 		-u $(UID):$(GID) \
-		node:13.1 \
+		node:15.8 \
 		sh -c "mkdir ~/.npm-global && npm config set prefix '~/.npm-global' && npm install -g prettier && ~/.npm-global/bin/prettier --write /tlscerts/index.html"
 
 wasm:
