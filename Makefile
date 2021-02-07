@@ -6,7 +6,7 @@ dev-serve:
 		-v $(PWD):/tlscerts:ro \
 		-w /tlscerts \
 		-p 8080:8080 \
-		python:3.8 \
+		python:3.9 \
 		python -m http.server 8080
 
 prettier:
@@ -36,13 +36,22 @@ test:
 		jchorl/golang \
 		go test .
 
+compose:
+	docker run -it --rm \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v $(PWD):$(PWD):ro \
+		-w $(PWD)/examples \
+		--env=LANGUAGE=python \
+		docker/compose:1.27.4 \
+		sh
+
 integration-build:
 	docker run -it --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(PWD):$(PWD):ro \
 		-w $(PWD)/examples \
-		--env=LANGUAGE=js \
-		docker/compose:1.24.1 \
+		--env=LANGUAGE=python \
+		docker/compose:1.27.4 \
 		build
 
 integration:
@@ -50,6 +59,6 @@ integration:
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(PWD):$(PWD):ro \
 		-w $(PWD)/examples \
-		--env=LANGUAGE=js \
-		docker/compose:1.24.1 \
-		run client
+		--env=LANGUAGE=python \
+		docker/compose:1.27.4 \
+		up client

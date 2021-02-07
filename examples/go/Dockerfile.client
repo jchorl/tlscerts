@@ -1,4 +1,4 @@
-FROM golang:1.13
+FROM golang:1.15
 
 COPY go/client.go ./
 COPY testdata/ca.pem testdata/client.pem testdata/client-key.pem ./
